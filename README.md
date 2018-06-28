@@ -1,27 +1,15 @@
+##Forked
+This is a forked repo from <https://github.com/tiangolo/uwsgi-nginx-flask-docker>.
+A very well maintained repo. Much respect. I suggest you may prefer his repo over this one. I chose to fork it so that I could remove some of the options and "harden" the container somewhat. A specific purpose was chosen to focus on micro-service applications using this configuration. 
+
+
 ## Supported tags and respective `Dockerfile` links
 
-* [`python3.6` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.6/Dockerfile)
-* [`python3.6-index` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.6-index/Dockerfile)
-* [`python3.6-alpine3.7` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.6-alpine3.7/Dockerfile)
-* [`python3.5` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.5/Dockerfile)
-* [`python3.5-index` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.5/Dockerfile)
-* [`python2.7` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python2.7/Dockerfile)
-* [`python2.7-index` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python2.7-index/Dockerfile)
-* [`python2.7-alpine3.7` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python2.7-alpine3.7/Dockerfile)
-
-
-## DEPRECATED tags and respective `Dockerfile` links
-
-* [`flask`, `flask-upload`, `latest` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/deprecated/Dockerfile)
-* [`flask-index`, `flask-index-upload` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/deprecated-index/Dockerfile)
-* [`flask-python3.5`, `flask-python3.5-upload`  _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.5/Dockerfile)
-* [`flask-python3.5-index`, `flask-python3.5-index-upload`  _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python3.5-index/Dockerfile)
-* [`flask-python2.7` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/python2.7/Dockerfile)
-
+* [`python3.6-alpine3.7` _(Dockerfile)_](https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/blob/master/python3.6-alpine3.7/Dockerfile)
 
 # uwsgi-nginx-flask
 
-**Docker** image with **uWSGI** and **Nginx** for **Flask** web applications in **Python 3.6**, **Python 3.5** and **Python 2.7** running in a single container. Optionally using Alpine Linux.
+**Docker** image with **uWSGI** and **Nginx** for **Flask** web applications in **Python 3.6** running in a single container using Alpine Linux. All libraries and packages are specific versions known to work together.
 
 ## Description
 
@@ -29,43 +17,39 @@ This [**Docker**](https://www.docker.com/) image allows you to create [**Flask**
 
 uWSGI with Nginx is one of the best ways to deploy a Python web application, so you should have [good performance (check the benchmarks)](http://nichol.as/benchmark-of-python-web-servers) with this image.
 
-There is also an Alpine version. If you want it, use one of the Alpine tags from above.
+**GitHub repo**: <https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker>
 
-**GitHub repo**: <https://github.com/tiangolo/uwsgi-nginx-flask-docker>
-
-**Docker Hub image**: <https://hub.docker.com/r/tiangolo/uwsgi-nginx-flask/>
+**Docker Hub image**: 
 
 ## Examples (project templates)
 
 * **`python3.6`** tag: general Flask web application: 
 
-[**example-flask-python3.6.zip**](<https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6.zip>)
+[**example-flask-python3.6.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6.zip>)
 
 * **`python3.6`** tag: general Flask web application, structured as a package, for bigger Flask projects, with different submodules. Use it only as an example of how to import your modules and how to structure your own project:
 
-[**example-flask-package-python3.6.zip**](<https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-package-python3.6.zip>)
+[**example-flask-package-python3.6.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-package-python3.6.zip>)
 
 * **`python3.6-index`** tag: `static/index.html` served directly in `/`, e.g. for Angular, React, or any other Single-Page Application that uses a static `index.html`, not modified by Python: 
 
-[**example-flask-python3.6-index.zip**](<https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6-index.zip>)
+[**example-flask-python3.6-index.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6-index.zip>)
 
 ## General Instructions
 
 You don't have to clone this repo, you should be able to use this image as a base image for your project with something in your `Dockerfile` like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
 
 COPY ./app /app
 ```
-
-There are several image tags available for Python 3.6, Python 3.5 and Python 2.7, but for new projects you should use **Python 3.6**. 
 
 As of now, [everyone](https://www.python.org/dev/peps/pep-0373/) [should be](http://flask.pocoo.org/docs/0.12/python3/#python3-support) [using **Python 3**](https://docs.djangoproject.com/en/1.11/faq/install/#what-python-version-should-i-use-with-django).
 
 There are several template projects that you can download (as a `.zip` file) to bootstrap your project in the section "**Examples (project templates)**" above.
 
-This Docker image is based on [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/). That Docker image has uWSGI and Nginx installed in the same container and was made to be the base of this image.
+This Docker image is based on [**python docker container using alpine linux**](https://hub.docker.com/_/python/). This Docker image adds uWSGI with Flask and Nginx, installed in the same container. This will serve as a base for micro-services written in python.
 
 
 ## QuickStart
@@ -80,7 +64,7 @@ Or you may follow the instructions to build your project from scratch:
 * Create a `Dockerfile` with:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
 
 COPY ./app /app
 ```
@@ -148,7 +132,7 @@ Or you may follow the instructions to build your project from scratch (it's very
 * Create a `Dockerfile` with:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
 
 ENV STATIC_INDEX 1
 
@@ -372,24 +356,6 @@ For example, to have a maximum upload file size of 1 MB (Nginx's default) add a 
 ENV NGINX_MAX_UPLOAD 1m
 ```
 
-### Custom listen port
-
-By default, the container made from this image will listen on port 80.
-
-To change this behavior, set the `LISTEN_PORT` environment variable. You might also need to create the respective `EXPOSE` Docker instruction.
-
-You can do that in your `Dockerfile`, it would look something like:
-
-```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
-
-ENV LISTEN_PORT 8080
-
-EXPOSE 8080
-
-COPY ./app /app
-```
-
 ### Custom `uwsgi.ini` file
 
 You can override where the image should look for the app `uwsgi.ini` file using the envirnoment variable `UWSGI_INI`.
@@ -492,7 +458,7 @@ or you can set it to the keyword `auto` and it will try to autodetect the number
 For example, using `auto`, your Dockerfile could look like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
 
 ENV NGINX_WORKER_PROCESSES auto
 
@@ -539,13 +505,9 @@ Roughly:
 
 * **Your Python code** has the actual **Flask** web application, and is run by uWSGI.
 
-The image [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/) takes advantage of already slim and optimized existing Docker images (based on Debian as [recommended by Docker](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/)) and implements Docker best practices.
-
-It uses the official Python Docker image, installs uWSGI and on top of that (with the least amount of modifications) and adds the official Nginx image.
+The image uses the official Python Docker image, installs Nginx, uWSGI and flask.
 
 And it controls all these processes with Supervisord.
-
-The image (and tags) created by this repo is based on the image [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/). This image adds Flask and sensible defaults on top of it.
 
 If you follow the instructions and keep the root directory `/app` in your container, with a file named `main.py` and a Flask object named `app` in it, it should "just work".
 
@@ -737,64 +699,9 @@ You will see your Flask debugging server start, you will see how it sends respon
 
 ## What's new
 
-2018-06-22:
-
-* You can now use `NGINX_WORKER_CONNECTIONS` to set the maximum number of Nginx worker connections and `NGINX_WORKER_OPEN_FILES` to set the maximum number of open files. Thanks to [ronlut](https://github.com/ronlut) in [this PR](https://github.com/tiangolo/uwsgi-nginx-flask-docker/pull/56).
-
-2018-06-22:
-
-Improvements from parent image:
-
-* Make uWSGI require an app to run, instead of going in "full dynamic mode" while there was an error. Supervisord doesn't terminate itself but tries to restart uWSGI and shows the errors. Uses `need-app` as suggested by [luckydonald](https://github.com/luckydonald) in [this comment](https://github.com/tiangolo/uwsgi-nginx-flask-docker/issues/3#issuecomment-321991279).
-
-* Correctly handled graceful shutdown of uWSGI and Nginx. Thanks to [desaintmartin](https://github.com/desaintmartin) in [this PR](https://github.com/tiangolo/uwsgi-nginx-docker/pull/30).
-
-2018-02-04:
-
-It's now possible to set the number of Nginx worker processes with the environment variable `NGINX_WORKER_PROCESSES`. Thanks to [naktinis](https://github.com/naktinis) in [this PR](https://github.com/tiangolo/uwsgi-nginx-docker/pull/22).
-
-2018-01-14:
-
-* There are now two Alpine based versions, `python2.7-alpine3.7` and `python3.6-alpine3.7`.
-
-2017-12-10: 
-
-* Added support for `/app/prestart.sh` script to run arbitrary code before starting the app (for example, Alembic - SQLAlchemy migrations). The [documentation for the `/app/prestart.sh` is in the main README](https://github.com/tiangolo/uwsgi-nginx-flask-docker#custom-appprestartsh).
-* `/app` is part of the `PYTHONPATH` environment variable. That allows global imports from several places, easier Alembic integration, etc.
-
-2017-12-08: Now you can configure which port the container should listen on, using the environment variable `LISTEN_PORT` thanks to [tmshn](https://github.com/tmshn) in [this PR](https://github.com/tiangolo/uwsgi-nginx-docker/pull/16).
-
-2017-09-10: Updated examples and sample project to work with SPAs even when structuring the app as a package (with subdirectories).
-
-2017-09-02: 
-
-* Example project with a [Python package](https://docs.python.org/3/tutorial/modules.html#packages) structure and a section explaining how to use it and structure a Flask project like that. 
-* Also, the examples and documentation now use the [`flask run`](http://flask.pocoo.org/docs/0.12/quickstart/#a-minimal-application) commands, that allows running a package application while developing more easily.
-
-2017-08-10: Many changes:
-
-* New official image tags: `python3.6`, `python3.6-index`, `python.3.5`, `python3.5-index`, `python2.7` and `python2.7-index`. All the other images are deprecated in favor is this ones. 
-* Python 3.6 is now the recommended default. Even the example projects for other versions were removed to discourage using older Python versions for new projects.
-* Any of the older images that didn't have a Python version will show a deprecation warning and take some time to start. As soon the tag `latest` will point to Python 3.6 and the other tags will be removed.
-* There were several improvements in the bas image `tiangolo/uwsgi-nginx` that improved this image too.
-* By default, now there is no limit in the upload file size in Nginx. It can be configured in an environment variable.
-* It's now possible to configure several things with environment variables: 
-  * Serve `index.html` directly: `STATIC_INDEX`
-  * Set the max upload file size: `NGINX_MAX_UPLOAD`
-  * Set a custom `uwsgi.ini` file (that allows using a custom directory different than `/app`): `UWSGI_INI` (using the ideas by @bercikr in #5 ).
-  * Set a custom `./static/` path: `STATIC_PATH`
-  * Set a custom `/static/` URL: `STATIC_URL`
-* As all this configurations are available as environment variables, the choices are a lot more simple. Actually, any new project would just need to use a `Dockerfile` with:
-
-```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6
-
-COPY ./app /app
-```
-
-and then customize with environment variables.
-
-
+2018-06-27:
+* Forked from <https://github.com/tiangolo/uwsgi-nginx-flask-docker>.
+* (refer to that repo for prior hisory)
 
 ## License
 
