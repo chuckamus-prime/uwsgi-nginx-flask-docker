@@ -1,4 +1,5 @@
-##Forked
+## Forked
+
 This is a forked repo from <https://github.com/tiangolo/uwsgi-nginx-flask-docker>.
 A very well maintained repo. Much respect. I suggest you may prefer his repo over this one. I chose to fork it so that I could remove some of the options and "harden" the container somewhat. A specific purpose was chosen to focus on micro-service applications using this configuration. 
 
@@ -9,7 +10,7 @@ A very well maintained repo. Much respect. I suggest you may prefer his repo ove
 
 # uwsgi-nginx-flask
 
-**Docker** image with **uWSGI** and **Nginx** for **Flask** web applications in **Python 3.6** running in a single container using Alpine Linux. All libraries and packages are specific versions known to work together.
+**Docker** image with **uWSGI** and **Nginx** for **Flask** web applications in **Python 3.6** running in a single container using **Alpine Linux**. All libraries and packages are specific versions known to work together.
 
 ## Description
 
@@ -23,27 +24,31 @@ uWSGI with Nginx is one of the best ways to deploy a Python web application, so 
 
 ## Examples (project templates)
 
-* **`python3.6`** tag: general Flask web application: 
+* **`python3.6-alpine3.7`** tag: general Flask web application: 
 
-[**example-flask-python3.6.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6.zip>)
+[**example-flask-python3.6-alpine3.7.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6-alpine3.7.zip>)
 
-* **`python3.6`** tag: general Flask web application, structured as a package, for bigger Flask projects, with different submodules. Use it only as an example of how to import your modules and how to structure your own project:
+* **`python3.6-alpine3.7`** tag: general Flask web application, structured as a package, for bigger Flask projects, with different submodules. Use it only as an example of how to import your modules and how to structure your own project:
 
-[**example-flask-package-python3.6.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-package-python3.6.zip>)
-
-* **`python3.6-index`** tag: `static/index.html` served directly in `/`, e.g. for Angular, React, or any other Single-Page Application that uses a static `index.html`, not modified by Python: 
-
-[**example-flask-python3.6-index.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-python3.6-index.zip>)
+[**example-flask-package-python3.6-alpine3.7.zip**](<https://github.com/chuckamus-prime/uwsgi-nginx-flask-docker/releases/download/v0.3.5/example-flask-package-python3.6-alpine3.7.zip>)
 
 ## General Instructions
 
-You don't have to clone this repo, you should be able to use this image as a base image for your project with something in your `Dockerfile` like:
+<!---You don't have to clone this repo, you should be able to use this image as a base image for your project with something in your `Dockerfile` like:
 
 ```Dockerfile
 FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
 
 COPY ./app /app
 ```
+--->
+Clone this repo, and then run the following command in the base directory:
+```
+./buildBaseImage.sh
+```
+
+Since thie image is not in dockerhub (yet), the script above will put the base container image in your local repo.
+
 
 As of now, [everyone](https://www.python.org/dev/peps/pep-0373/) [should be](http://flask.pocoo.org/docs/0.12/python3/#python3-support) [using **Python 3**](https://docs.djangoproject.com/en/1.11/faq/install/#what-python-version-should-i-use-with-django).
 
@@ -82,7 +87,7 @@ def hello():
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=True, port=80)
+    app.run(host='0.0.0.0', debug=True, port=443)
 ```
 
 the main application object should be named `app` (in the code) as in this example.
@@ -108,125 +113,12 @@ docker build -t myimage .
 * Run a container based on your image:
 
 ```bash
-docker run -d --name mycontainer -p 80:80 myimage
+docker run -d --name mycontainer -p 443:443 myimage
 ```
 
 ...and you have an optimized Flask server in a Docker container.
 
-You should be able to check it in your Docker container's URL, for example: <http://192.168.99.100/>
-
-
-## QuickStart for SPAs
-
-This section explains how to configure the image to serve the contents of `/static/index.html` directly when the browser requests `/`.
-
-This is specially helpful (and efficient) if you are building a Single-Page Application (SPA) with JavaScript (Angular, React, etc) and you want the `index.html` to be served directly, without modifications by Python or Jinja2 templates. And you want to use Flask mainly as an API / back end for your SPA front end.
-
-**Note**: You can download the example project **example-flask-python3.6-index.zip** and use it as the template for your project in the **Examples** section above.
-
----
-
-Or you may follow the instructions to build your project from scratch (it's very similar to the procedure above):
-
-* Go to your project directory
-* Create a `Dockerfile` with:
-
-```Dockerfile
-FROM chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
-
-ENV STATIC_INDEX 1
-
-COPY ./app /app
-```
-
-* Create an `app` directory and enter in it
-* Create a `main.py` file (it should be named like that and should be in your `app` directory) with:
-
-```python
-from flask import Flask, send_file
-app = Flask(__name__)
-
-
-@app.route("/hello")
-def hello():
-    return "Hello World from Flask"
-
-
-@app.route("/")
-def main():
-    index_path = os.path.join(app.static_folder, 'index.html')
-    return send_file(index_path)
-
-
-# Everything not declared before (not a Flask route / API endpoint)...
-@app.route('/<path:path>')
-def route_frontend(path):
-    # ...could be a static file needed by the front end that
-    # doesn't use the `static` path (like in `<script src="bundle.js">`)
-    file_path = os.path.join(app.static_folder, path)
-    if os.path.isfile(file_path):
-        return send_file(file_path)
-    # ...or should be handled by the SPA's "router" in front end
-    else:
-        index_path = os.path.join(app.static_folder, 'index.html')
-        return send_file(index_path)
-
-
-if __name__ == "__main__":
-    # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=True, port=80)
-```
-
-the main application object should be named `app` (in the code) as in this example.
-
-**Note**: The section with the `main()` function is for debugging purposes. To learn more, read the **Advanced instructions** below.
-
-* Make sure you have an `index.html` file in `./app/static/index.html`, for example with:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Index</title>
-</head>
-<body>
-<h1>Hello World from HTML</h1>
-</body>
-</html>
-```
-
-* You should now have a directory structure like:
-
-```
-.
-├── app
-│   ├── main.py
-│   └── static
-│       └── index.html
-└── Dockerfile
-```
-
-* Go to the project directory (in where your `Dockerfile` is, containing your `app` directory)
-* Build your Flask image:
-
-```bash
-docker build -t myimage .
-```
-
-* Run a container based on your image:
-
-```bash
-docker run -d --name mycontainer -p 80:80 myimage
-```
-
-...and you have an optimized Flask server in a Docker container. Also optimized to serve your main static `index.html` page.
-
-* Now, when you go to your Docker container URL, for example: <http://192.168.99.100/>, you will see your `index.html` as if you were in <http://192.168.99.100/static/index.html>.
-
-* You should be able to also go to, for example, <http://192.168.99.100/hello> to see a "Hello World" page served by Flask.
-
-**Note**: As your `index.html` file will be served from `/` and from `/static/index.html`, it would be better to have absolute paths in the links to other files in the `static` directory from your `index.html` file. As in `/static/css/styles.css` instead of relative paths as in `./css/styles.css`. But still, above you added code in your `main.py` to handle that too, just in case.
+You should be able to check it in your Docker container's URL, for example: <https://192.168.99.100:443/>
 
 ## QuickStart for bigger projects structured as a Python package
 
@@ -334,18 +226,6 @@ from app.core.database import users
 
 You can customize several things using environment variables.
 
-### Serve `index.html` directly
-
-Setting the environment variable `STATIC_INDEX` to be `1` you can configure Nginx to serve the file in the URL `/static/index.html` when requested for `/`. 
-
-That would improve speed as it would not involve uWSGI nor Python. Nginx would serve the file directly. To learn more follow the section above "**QuickStart for SPAs**".
-
-For example, to enable it, you could add this to your `Dockerfile`:
-
-```Dockerfile
-ENV STATIC_INDEX 1
-```
-
 ### Max upload file size
 
 You can set a custom maximum upload file size using an environment variable `NGINX_MAX_UPLOAD`, by default it has a value of `0`, that allows unlimited upload file sizes. This differs from Nginx's default value of 1 MB. It's configured this way because that's the simplest experience a developer that is not expert in Nginx would expect.
@@ -374,44 +254,6 @@ WORKDIR /application
 **Note**: the `WORKDIR` is important, otherwhise uWSGI will try to run the app in `/app`.
 
 **Note**: you would also have to configure the `static` files path, read below.
-
-
-### Custom `./static/` path
-
-You can make Nginx use a custom directory path with the files to serve directly (without having uWSGI involved) with the environment variable `STATIC_PATH`.
-
-For example, to make Nginx serve the static content using the files in `/app/custom_static/` you could add this to your `Dockerfile`:
-
-```Dockerfile
-ENV STATIC_PATH /app/custom_static
-```
-
-Then, when the browser asked for a file in, for example, http://example.com/static/index.html, Nginx would answer directly using a file in the path `/app/custom_static/index.html`.
-
-**Note**: you would also have to configure Flask to use that as its `static` directory.
-
----
-
-As another example, if you needed to put your application code in a different directory, you could configure Nginx to serve those static files from that different directory.
-
-If you needed to have your static files in `/application/static/` you could add this to your `Dockerfile`:
-
-```Dockerfile
-ENV STATIC_PATH /application/static
-```
-
-### Custom `/static` URL
-
-You can also make Nginx serve the static files in a different URL, for that, you can use the environment variable `STATIC_URL`.
-
-For example, if you wanted to change the URL `/static` to `/content` you could add this to your `Dockerfile`:
-
-```Dockerfile
-ENV STATIC_URL /content
-```
-
-Then, when the browser asked for a file in, for example, http://example.com/content/index.html, Nginx would answer directly using a file in the path `/app/static/index.html`.
-
 
 ### Custom `/app/prestart.sh`
 
@@ -580,7 +422,7 @@ docker build -t myimage .
 * Run a container based on your image, mapping your code directory (`./app`) to your container's `/app` directory:
 bash
 ```
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app myimage
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app myimage
 ```
 
 If you go to your Docker container URL you should see your app, and you should be able to modify files in `./app/static/` and see those changes reflected in your browser just by reloading.
@@ -592,13 +434,13 @@ To be able to (temporarily) debug your Python Flask code live, you can run your 
 So, with all the modifications above and making your app run directly with `flask`, the final Docker command would be:
 
  ```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=80
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=443
 ```
 
 Or in the case of a package project, you would set `FLASK_APP=main/main.py`:
 
 ```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=80
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=443
 ```
 
 Now you can edit your Flask code in your local machine and once you refresh your browser, you will see the changes live.
@@ -610,7 +452,7 @@ An alternative for these last steps to work when you don't have a package but ju
 ```python
 if __name__ == "__main__":
    # Only for debugging while developing
-   app.run(host='0.0.0.0', debug=True, port=80)
+   app.run(host='0.0.0.0', debug=True, port=443)
 ```
 
 ...and you could run it with `python main.py`. But that will only work when you are not using a package structure and don't plan to do it later. In that specific case, if you didn't add the code block above, your app would only listen to `localhost` (inside the container), in another port (5000) and not in debug mode.
@@ -619,45 +461,6 @@ if __name__ == "__main__":
 
 ---
 
-Also, if you want to do the same live debugging using the environment variable `STATIC_INDEX=1` (to serve `/app/static/index.html` directly when requested for `/`) your Nginx won't serve it directly as it won't be running (only your Python Flask app in debug mode will be running).
-
-```python
-from flask import Flask, send_file
-```
-
-and
-
-```python
-@app.route('/')
-def route_root():
-    index_path = os.path.join(app.static_folder, 'index.html')
-    return send_file(index_path)
-```
-
-...that makes sure your app also serves the `/app/static/index.html` file when requested for `/`. Or if you are using a package structure, the `/app/main/static/index.html` file.
-
-And if you are using a SPA framework, to allow it to handle the URLs in the browser, your Python Flask code should have the section with:
-
-```python
-# Everything not declared before (not a Flask route / API endpoint)...
-@app.route('/<path:path>')
-def route_frontend(path):
-    # ...could be a static file needed by the front end that
-    # doesn't use the `static` path (like in `<script src="bundle.js">`)
-    file_path = os.path.join(app.static_folder, path)
-    if os.path.isfile(file_path):
-        return send_file(file_path)
-    # ...or should be handled by the SPA's "router" in front end
-    else:
-        index_path = os.path.join(app.static_folder, 'index.html')
-        return send_file(index_path)
-```
-
-...that makes Flask send all the CSS, JavaScript and image files when requested in the root (`/`) URL but also makes sure that your front end SPA handles all the other URLs that are not defined in your Flask app.
-
-That's how it is written in the tutorial above and is included in the downloadable examples.
-
-**Note**: The example project **example-flask-python3.6-index** includes a `docker-compose.yml` and `docker-compose.override.yml` with all these configurations, if you are using Docker Compose.
 
 ## More advanced development instructions
 
@@ -672,13 +475,13 @@ So, while developing, you could do the following (that's what I normally do, alt
 * Make your container run and keep it alive in an infinite loop (without running any server):
 
 ```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
 ```
 
 * Or, if your project is a package, set `FLASK_APP=main/main.py`:
 
 ```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
 ```
 
 * Connect to your container with a new interactive session:
@@ -692,12 +495,20 @@ You will now be inside your container in the `/app` directory.
 * Now, from inside the container, run your Flask debugging server:
 
 ```bash
-flask run --host=0.0.0.0 --port=80
+flask run --host=0.0.0.0 --port=443
 ```
 
 You will see your Flask debugging server start, you will see how it sends responses to every request, you will see the errors thrown when you break your code and how they stop your server and you will be able to re-start your server very fast, by just running the command above again.
 
 ## What's new
+2018-06-28:
+* Removed references to static content serving. 
+* Changed ports in documentation from 80 to 443
+* Removed depricated code/examples
+* Consolodated to the python 3.6 version using Alpine Linux
+* Specified the version of Flask for pip
+* merged Sebastián Ramírez's base container and its neccesary files <https://github.com/tiangolo/uwsgi-nginx-docker> into one base image with more control in one base image and prescribing flask
+
 
 2018-06-27:
 * Forked from <https://github.com/tiangolo/uwsgi-nginx-flask-docker>.
