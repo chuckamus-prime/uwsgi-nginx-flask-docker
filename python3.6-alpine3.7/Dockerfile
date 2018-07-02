@@ -190,8 +190,8 @@ ENV LISTEN_PORT 443
 
 #vvv tack on flask support vvv
 
-RUN pip install --trusted-host pypi.python.org --cert cert.pem --no-cache-dir Flask==1.0.2
-
+#RUN pip install --trusted-host pypi.python.org --cert cert.pem --no-cache-dir Flask==1.0.2
+RUN pip install --trusted-host pypi.python.org --no-cache-dir Flask==1.0.2
 
 # URL under which static (not modified by Python) files will be requested
 # They will be served by Nginx directly, without being handled by uWSGI
