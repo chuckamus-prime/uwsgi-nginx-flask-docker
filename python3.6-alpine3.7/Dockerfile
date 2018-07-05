@@ -188,6 +188,9 @@ ENV NGINX_WORKER_PROCESSES 1
 # Only allow https traffic
 ENV LISTEN_PORT 443
 
+# set up paths for certs to be stored 
+RUN mkdir -p /etc/pki/nginx/private
+
 #vvv tack on flask support vvv
 
 #RUN pip install --trusted-host pypi.python.org --cert cert.pem --no-cache-dir Flask==1.0.2
