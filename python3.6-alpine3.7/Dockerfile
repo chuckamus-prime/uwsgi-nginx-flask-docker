@@ -144,7 +144,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Standard set up Nginx finished
 #remove exposure of regular port 80. all traffic shall come in through https on 443
-#EXPOSE 80
+EXPOSE 80
 # Expose 443, in case of LTS / HTTPS
 EXPOSE 443
 
