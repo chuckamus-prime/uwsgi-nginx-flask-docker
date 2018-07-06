@@ -87,7 +87,7 @@ def hello():
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=True, port=443)
+    app.run(host='0.0.0.0', debug=True, port=9000)
 ```
 
 the main application object should be named `app` (in the code) as in this example.
@@ -434,13 +434,13 @@ To be able to (temporarily) debug your Python Flask code live, you can run your 
 So, with all the modifications above and making your app run directly with `flask`, the final Docker command would be:
 
  ```bash
-docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=443
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=9000
 ```
 
 Or in the case of a package project, you would set `FLASK_APP=main/main.py`:
 
 ```bash
-docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=443
+docker run -d --name mycontainer -p 443:443 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=9000
 ```
 
 Now you can edit your Flask code in your local machine and once you refresh your browser, you will see the changes live.
@@ -452,7 +452,7 @@ An alternative for these last steps to work when you don't have a package but ju
 ```python
 if __name__ == "__main__":
    # Only for debugging while developing
-   app.run(host='0.0.0.0', debug=True, port=443)
+   app.run(host='0.0.0.0', debug=True, port=9000)
 ```
 
 ...and you could run it with `python main.py`. But that will only work when you are not using a package structure and don't plan to do it later. In that specific case, if you didn't add the code block above, your app would only listen to `localhost` (inside the container), in another port (5000) and not in debug mode.
@@ -495,7 +495,7 @@ You will now be inside your container in the `/app` directory.
 * Now, from inside the container, run your Flask debugging server:
 
 ```bash
-flask run --host=0.0.0.0 --port=443
+flask run --host=0.0.0.0 --port=9001
 ```
 
 You will see your Flask debugging server start, you will see how it sends responses to every request, you will see the errors thrown when you break your code and how they stop your server and you will be able to re-start your server very fast, by just running the command above again.
