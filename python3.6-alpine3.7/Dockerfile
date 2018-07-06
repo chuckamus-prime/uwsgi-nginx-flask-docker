@@ -145,16 +145,25 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Standard set up Nginx finished
 #remove exposure of regular port 80. all traffic shall come in through https on 443
 #EXPOSE 80
-# # Expose 443, in case of LTS / HTTPS
+# Expose 443, in case of LTS / HTTPS
 EXPOSE 443
+
+# By default, Nginx listens on port 80.
+# To modify this, change LISTEN_PORT environment variable.
+# (in a Dockerfile or with an option for `docker run`)
+#ENV LISTEN_PORT 80
+# Only allow https traffic
+ENV LISTEN_PORT 443
 
 # Install uWSGI
 RUN apk add --no-cache uwsgi-python3
 
 # Make NGINX run on the foreground
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
 # Copy the modified Nginx conf
 COPY nginx-custom.conf /etc/nginx/conf.d/nginx.conf
+
 # Copy the base uWSGI ini file to enable default dynamic uwsgi process number
 COPY uwsgi.ini /etc/uwsgi/
 
@@ -181,30 +190,16 @@ ENV NGINX_MAX_UPLOAD 0
 # will create a worker for each CPU core
 ENV NGINX_WORKER_PROCESSES 1
 
-# By default, Nginx listens on port 80.
-# To modify this, change LISTEN_PORT environment variable.
-# (in a Dockerfile or with an option for `docker run`)
-#ENV LISTEN_PORT 80
-# Only allow https traffic
-ENV LISTEN_PORT 443
-
 # set up paths for certs to be stored 
 RUN mkdir -p /etc/pki/nginx/private
+
+# set up paths for log files
+RUN mkdir -p /var/log/nginx
 
 #vvv tack on flask support vvv
 
 #RUN pip install --trusted-host pypi.python.org --cert cert.pem --no-cache-dir Flask==1.0.2
 RUN pip install --trusted-host pypi.python.org --no-cache-dir Flask==1.0.2
-
-# URL under which static (not modified by Python) files will be requested
-# They will be served by Nginx directly, without being handled by uWSGI
-ENV STATIC_URL /static
-# Absolute path in where the static files wil be
-ENV STATIC_PATH /app/static
-
-# If STATIC_INDEX is 1, serve / with /static/index.html directly (or the static URL configured)
-# ENV STATIC_INDEX 1
-ENV STATIC_INDEX 0
 
 # Add demo app
 COPY ./app /app
