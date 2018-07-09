@@ -1,0 +1,5 @@
+version: '2'
+services:
+  base:
+    build: ./
+    image: chuckamus-prime/uwsgi-nginx-flask:python3.6-alpine3.7
