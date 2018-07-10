@@ -28,4 +28,22 @@ USE_LISTEN_PORT=${LISTEN_PORT:-443}
 # Otherwise uWSGI can't import Flask
 export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages:/usr/lib/python3.6/site-packages
 
+# Generate Nginx config first part using the environment variables
+echo "server {
+    listen ${USE_LISTEN_PORT} ssl;
+    ssl_certificate /etc/pki/nginx/chain.pem;
+    ssl_certificate_key /etc/pki/nginx/private/key.pem;
+    ssl_protocols TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!MD5:!RSA;
+
+    location / {
+        try_files \$uri @app;
+    }
+
+    location @app {
+        include uwsgi_params;
+        uwsgi_pass unix:///tmp/uwsgi.sock;
+    }
+}" >> /etc/nginx/conf.d/nginx.conf
+
 exec "$@"
