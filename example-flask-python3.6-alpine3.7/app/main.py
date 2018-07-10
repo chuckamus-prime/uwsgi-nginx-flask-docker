@@ -7,6 +7,6 @@ def hello():
     return "Hello World from Flask in a uWSGI Nginx Docker container with Python 3.6 (from the example template)"
 
 
-# if __name__ == "__main__":
-#     # Only for debugging while developing
-#     app.run(host='0.0.0.0', debug=True, port=9000)
+if __name__ == "__main__":
+    # Only for debugging while developing
+    app.run(host='0.0.0.0', debug=True, port=9000)
