@@ -457,7 +457,7 @@ if __name__ == "__main__":
 
 ...and you could run it with `python main.py`. But that will only work when you are not using a package structure and don't plan to do it later. In that specific case, if you didn't add the code block above, your app would only listen to `localhost` (inside the container), in another port (5000) and not in debug mode.
 
-**Note**: The example project **example-flask-python3.6** includes a `docker-compose.yml` and `docker-compose.override.yml` with all these configurations, if you are using Docker Compose.
+**Note**: The example project **example-flask-python3.6** includes a `docker-compose.yml` and `docker-compose.debug-override.yml` with all these configurations, if you are using Docker Compose.
 
 ---
 
@@ -501,9 +501,12 @@ flask run --host=0.0.0.0 --port=9001
 You will see your Flask debugging server start, you will see how it sends responses to every request, you will see the errors thrown when you break your code and how they stop your server and you will be able to re-start your server very fast, by just running the command above again.
 
 ## What's new
-2018-06-28:
+2018-07-10:
+* created paths for certificates to be injected into containers
+* changed the default port from 80 to 9000 for the flask app to run under when not ran within uwsgi and nginx. (docker-compose.debug-override.yml is used)
+* Changed the docker-compose override file name so it wouldnt automatcally be used. 
 * Removed references to static content serving. 
-* Changed ports in documentation from 80 to 443
+* Changed ports in documentation and nginx configuration from 80 to 443
 * Removed depricated code/examples
 * Consolodated to the python 3.6 version using Alpine Linux
 * Specified the version of Flask for pip
