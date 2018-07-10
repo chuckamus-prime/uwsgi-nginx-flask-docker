@@ -504,13 +504,13 @@ You will see your Flask debugging server start, you will see how it sends respon
 2018-07-10:
 * created paths for certificates to be injected into containers
 * changed the default port from 80 to 9000 for the flask app to run under when not ran within uwsgi and nginx. (docker-compose.debug-override.yml is used)
-* Changed the docker-compose override file name so it wouldnt automatcally be used. 
+* Changed the docker-compose override file name so it wouldn't automatically be used. 
 * Removed references to static content serving. 
 * Changed ports in documentation and nginx configuration from 80 to 443
-* Removed depricated code/examples
-* Consolodated to the python 3.6 version using Alpine Linux
+* Removed deprecated code/examples
+* Consolidated to the python 3.6 version using Alpine Linux
 * Specified the version of Flask for pip
-* merged Sebastián Ramírez's base container and its neccesary files <https://github.com/tiangolo/uwsgi-nginx-docker> into one base image with more control in one base image and prescribing flask
+* merged Sebastián Ramírez's base container and its necessary files <https://github.com/tiangolo/uwsgi-nginx-docker> into one base image with more control in one base image and prescribing flask
 
 
 2018-06-27:
